@@ -378,6 +378,7 @@
                 <option value="sports">ক্রীড়া</option>
                 <option value="news">সংবাদ</option>
                 <option value="movies">সিনেমা</option>
+                <option value="entertainment">বিনোদন</option>
               </select>
             </div>
             <ul class="list-group" id="channelList"></ul>
@@ -401,6 +402,17 @@
       </div>
       <div class="card mt-3">Warning: কলের জন্য HTTPS বা localhost প্রয়োজন। ক্যামেরা/মাইক্রোফোন অ্যাক্সেস দিতে হবে।</div>
     </div>
+  </div>
+
+  <div id="question" class="section">
+    <h2>প্রশ্ন জমা দিন</h2>
+    <div class="card">
+      <label for="questionInput">আপনার প্রশ্ন</label>
+      <input type="text" id="questionInput" placeholder="প্রশ্ন লিখুন..." class="form-control" style="margin-bottom:10px">
+      <button onclick="submitQuestion()" aria-label="প্রশ্ন জমা দিন">জমা দিন</button>
+      <div id="questionResponse" class="mt-3"></div>
+    </div>
+    <div class="card">No Warning needed here</div>
   </div>
 
   <footer class="text-center py-4 mt-4" style="background-color: var(--nav-bg); color: white;">

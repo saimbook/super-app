@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>সুপার অ্যাপ v5</title>
+  <title>সুপার অ্যাপ v4</title>
   <link rel="manifest" href="/manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #f4f4f4;
@@ -61,12 +61,22 @@
     header button:hover {
       background-color: var(--button-hover-bg);
     }
-    .navbar-nav .nav-link {
-      color: white !important;
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      background-color: var(--nav-bg);
+      padding: 5px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    nav a {
+      color: white;
       padding: 10px 15px;
+      text-decoration: none;
+      white-space: nowrap;
       transition: background-color 0.2s ease;
     }
-    .navbar-nav .nav-link:hover {
+    nav a:hover {
       background-color: var(--header-bg);
     }
     .section {
@@ -97,14 +107,14 @@
     button:hover {
       background-color: var(--button-hover-bg);
     }
-    input[type="text"], input[type="email"], input[type="password"], textarea {
+    input[type="text"], input[type="email"], input[type="password"], textarea, select {
       background-color: var(--bg-color);
       color: var(--text-color);
       border: 1px solid #ccc;
       padding: 10px;
       border-radius: 5px;
     }
-    body.dark input[type="text"], body.dark input[type="email"], body.dark input[type="password"], body.dark textarea {
+    body.dark input[type="text"], body.dark input[type="email"], body.dark input[type="password"], body.dark textarea, body.dark select {
       background-color: #3d4a5c;
       border-color: #555;
     }
@@ -119,7 +129,8 @@
       background-color: #000;
       padding: 10px;
       border-radius: 8px;
-      position: relative;
+      position: relative; /* For spinner positioning */
+      min-height: 200px; /* Ensure space for video even if not loaded */
     }
     .channel-list-container {
       background-color: var(--card-bg);
@@ -157,110 +168,97 @@
       background-color: var(--button-hover-bg);
     }
     .channel-list-container .list-group-item img {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-      border-radius: 5px;
-      object-fit: contain;
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 5px;
+        object-fit: contain;
     }
     .chat-message {
-      background-color: var(--bg-color);
-      padding: 8px 12px;
-      border-radius: 15px;
-      margin-bottom: 8px;
-      word-wrap: break-word;
-      max-width: 80%;
+        background-color: var(--bg-color);
+        padding: 8px 12px;
+        border-radius: 15px;
+        margin-bottom: 8px;
+        word-wrap: break-word;
+        max-width: 80%;
     }
     body.dark .chat-message {
-      background-color: #3d4a5c;
+        background-color: #3d4a5c;
     }
     .chat-message small {
-      display: block;
-      text-align: right;
-      font-size: 0.75em;
-      color: #777;
+        display: block;
+        text-align: right;
+        font-size: 0.75em;
+        color: #777;
     }
-    .loading-spinner {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #fff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+    /* Spinner for video loading */
+    .spinner-border {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
     }
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    #streamError {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+        display: none; /* Hidden by default */
     }
     .video-call-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
     .video-call-container video {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      border-radius: 8px;
-      background-color: #000;
-    }
-    @media (max-width: 991px) {
-      .channel-list-container {
-        margin-top: 20px;
-      }
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid var(--button-bg);
+        border-radius: 8px;
+        background-color: black;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>📱 সুপার অ্যাপ (v5)</h1>
-    <button onclick="toggleDarkMode()" aria-label="ডার্ক মোড টগল করুন">🌙 ডার্ক মোড</button>
+    <h1>📱 সুপার অ্যাপ (v4)</h1>
+    <button onclick="toggleDarkMode()">🌙 ডার্ক মোড</button>
   </header>
-  <nav class="navbar navbar-expand-lg" style="background-color: var(--nav-bg);">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="নেভিগেশন টগল করুন">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('jokes')">😂 জোকস</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('stories')">📖 গল্প</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('news')">📰 নিউজ</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('videos')">🎥 ভিডিও</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('profile')">👤 প্রোফাইল</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('prayer')">🕌 নামাজ</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('calendar')">📅 ক্যালেন্ডার</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('events')">📝 ইভেন্ট</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('chat')">💬 চ্যাট</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('live-tv')">📺 লাইভ টিভি</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('call')">📞 কল</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" onclick="printPage()">🖨️ প্রিন্ট</a></li>
-        </ul>
-      </div>
-    </div>
+  <nav>
+    <a href="#" onclick="showSection('jokes')">😂 জোকস</a>
+    <a href="#" onclick="showSection('stories')">📖 গল্প</a>
+    <a href="#" onclick="showSection('news')">📰 নিউজ</a>
+    <a href="#" onclick="showSection('videos')">🎥 ভিডিও</a>
+    <a href="#" onclick="showSection('profile')">👤 প্রোফাইল</a>
+    <a href="#" onclick="showSection('prayer')">🕌 নামাজ</a>
+    <a href="#" onclick="showSection('calendar')">📅 ক্যালেন্ডার</a>
+    <a href="#" onclick="showSection('events')">📝 ইভেন্ট ও পোস্ট</a>
+    <a href="#" onclick="showSection('chat')">💬 চ্যাট</a>
+    <a href="#" onclick="showSection('live-tv')">📺 লাইভ টিভি</a>
+    <a href="#" onclick="showSection('call')">📞 কল</a>
+    <a href="#" onclick="printPage()">🖨️ প্রিন্ট</a>
   </nav>
 
   <div id="jokes" class="section active">
-    <h2>বাংলা জোকস</h2>
+    <h2>বাংলা জোকস (অনুবাদিত)</h2>
     <div class="card" id="joke">জোকস লোড হচ্ছে...</div>
-    <button onclick="loadJoke()" aria-label="নতুন জোকস লোড করুন">নতুন জোকস</button>
+    <button onclick="loadJoke()">নতুন জোকস</button>
+    <p class="mt-3 text-muted">দ্রষ্টব্য: এই জোকসগুলো ইংরেজি থেকে স্বয়ংক্রিয়ভাবে অনুবাদ করা হয়েছে।</p>
   </div>
 
   <div id="stories" class="section">
     <h2>বাংলা গল্প</h2>
     <div class="card" id="story">গল্প লোড হচ্ছে...</div>
-    <button onclick="loadStory()" aria-label="নতুন গল্প লোড করুন">নতুন গল্প</button>
+    <button onclick="loadStory()">নতুন গল্প</button>
   </div>
 
   <div id="news" class="section">
     <h2>বাংলা নিউজ</h2>
     <div class="card">🔗 <a href="https://www.bbc.com/bengali" target="_blank">BBC বাংলা</a></div>
     <div class="card">🔗 <a href="https://bangla.bdnews24.com" target="_blank">BDNews24 বাংলা</a></div>
+    <p class="mt-3 text-muted">ভবিষ্যতে এখানে API ব্যবহার করে সরাসরি নিউজের শিরোনাম দেখানো যাবে।</p>
   </div>
 
   <div id="videos" class="section">
@@ -268,20 +266,20 @@
     <div class="card">
       <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
     </div>
+    <p class="mt-3 text-muted">এখানে একটি উদাহরণ ভিডিও দেওয়া হয়েছে। ভবিষ্যতে এখানে YouTube API ব্যবহার করে ভিডিও সার্চ বা প্লেলিস্ট দেখানো যাবে।</p>
   </div>
 
   <div id="profile" class="section">
-    <h2>ইউজার প্রোফাইল</h2>
+    <h2>প্রোফাইল</h2>
     <div class="card">
-      <label for="username">নাম</label>
       <input type="text" id="username" placeholder="নাম" class="form-control" style="margin-bottom:10px"><br>
-      <label for="email">ইমেইল</label>
       <input type="email" id="email" placeholder="ইমেইল" class="form-control" style="margin-bottom:10px"><br>
-      <button onclick="saveProfile()" aria-label="প্রোফাইল সেভ করুন">প্রোফাইল সেভ</button>
+      <button onclick="saveProfile()">প্রোফাইল সেভ করুন</button>
       <div id="profileMessage" class="mt-3"></div>
-      <h4 class="mt-3">ফেভারিট চ্যানেল</h4>
-      <ul id="favoriteChannels" class="list-group"></ul>
     </div>
+    <h3 class="mt-4">ফেভারিট চ্যানেল</h3>
+    <ul class="list-group" id="favoriteChannels">
+      </ul>
   </div>
 
   <div id="prayer" class="section">
@@ -291,6 +289,7 @@
     <div class="card">🕕 আসর: ৪:০০ PM</div>
     <div class="card">🕖 মাগরিব: ৬:৩০ PM</div>
     <div class="card">🕗 এশা: ৮:০০ PM</div>
+    <p class="mt-3 text-muted">ভবিষ্যতে এখানে API ব্যবহার করে আপনার এলাকার জন্য সঠিক নামাজের সময় দেখানো যাবে।</p>
   </div>
 
   <div id="calendar" class="section">
@@ -302,60 +301,68 @@
     <h2>ইভেন্ট ও পোস্ট যোগ করুন</h2>
     <div class="card">
       <textarea id="eventContent" placeholder="আপনার ইভেন্ট বা পোস্ট লিখুন..." class="form-control" style="width:100%; height: 100px; margin-bottom: 10px; padding: 10px; box-sizing: border-box;"></textarea>
-      <button onclick="addEvent()" aria-label="ইভেন্ট পোস্ট করুন">পোস্ট করুন</button>
+      <button onclick="addEvent()">পোস্ট করুন</button>
     </div>
     <h3>সকল ইভেন্ট ও পোস্ট</h3>
-    <div id="eventList"></div>
+    <div id="eventList">
+      </div>
   </div>
 
   <div id="chat" class="section">
-    <h2>রিয়েল-টাইম চ্যাট</h2>
-    <div class="card">
-      <label for="chatRoomId">চ্যাট রুম আইডি</label>
-      <input type="text" id="chatRoomId" placeholder="রুম আইডি" class="form-control" style="margin-bottom:10px">
-      <button onclick="joinChatRoom()" aria-label="চ্যাট রুমে জয়েন করুন">জয়েন</button>
-      <div id="chatBox" class="card" style="height: 300px; overflow-y: auto; margin-top: 10px;"></div>
-      <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." class="form-control" style="width: calc(100% - 70px); display: inline-block; margin-right: 5px;" aria-label="মেসেজ ইনপুট">
-      <button onclick="sendMessage()" aria-label="মেসেজ পাঠান">পাঠান</button>
+    <h2>পিয়ার-টু-পিয়ার চ্যাট (লোকাল)</h2>
+    <div class="card" style="margin-bottom:10px;">
+        <label for="chatRoomId">চ্যাট রুম আইডি:</label>
+        <input type="text" id="chatRoomId" placeholder="রুম আইডি" class="form-control" style="width: calc(100% - 100px); display: inline-block; margin-right: 5px;">
+        <button onclick="joinChatRoom()">জয়েন করুন</button>
     </div>
+    <div class="card" style="height: 300px; overflow-y: auto;" id="chatBox">
+      </div>
+    <div class="card">
+      <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." class="form-control" style="width: calc(100% - 70px); display: inline-block; margin-right: 5px;">
+      <button onclick="sendMessage()">পাঠান</button>
+    </div>
+    <p class="mt-3 text-muted">দ্রষ্টব্য: এই চ্যাট ফিচারটি পিয়ার-টু-পিয়ার এবং HTTPS বা localhost প্রয়োজন।</p>
   </div>
 
   <div id="live-tv" class="section">
     <h2>📺 লাইভ টিভি</h2>
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-8 mb-3">
-          <div class="video-player-container">
-            <video id="tvPlayer" controls autoplay style="width: 100%; height: auto; max-height: 600px;" aria-label="লাইভ টিভি প্লেয়ার">
-              আপনার ব্রাউজার ভিডিও সমর্থন করে না।
-            </video>
-            <div class="loading-spinner" id="videoSpinner"></div>
-          </div>
-          <h4 id="currentChannelName" class="mt-3 text-center">একটি চ্যানেল নির্বাচন করুন</h4>
-          <div id="streamError" style="display: none; color: red; text-align: center;"></div>
-        </div>
-        <div class="col-lg-4">
-          <div class="channel-list-container">
-            <h4>চ্যানেল তালিকা</h4>
-            <div class="mb-3">
-              <label for="channelSearch" class="form-label">চ্যানেল সার্চ</label>
-              <input type="text" id="channelSearch" placeholder="চ্যানেল খুঁজুন..." class="form-control" oninput="filterChannels()" aria-label="চ্যানেল সার্চ">
+        <div class="row">
+            <div class="col-lg-8 mb-3">
+                <div class="video-player-container">
+                    <video id="tvPlayer" controls autoplay style="width: 100%; height: auto; max-height: 600px;">
+                        আপনার ব্রাউজার ভিডিও সমর্থন করে না।
+                    </video>
+                    <div id="videoSpinner" class="spinner-border text-light" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <h4 id="currentChannelName" class="mt-3 text-center">একটি চ্যানেল নির্বাচন করুন</h4>
+                <div id="streamError" class="alert alert-danger mt-2" role="alert" style="display:none;"></div>
             </div>
-            <div class="mb-3">
-              <label for="channelCategory" class="form-label">ক্যাটাগরি নির্বাচন করুন</label>
-              <select id="channelCategory" class="form-select" onchange="filterChannels()" aria-label="চ্যানেল ক্যাটাগরি নির্বাচন">
-                <option value="all">সব চ্যানেল</option>
-                <option value="sports">ক্রীড়া</option>
-                <option value="news">সংবাদ</option>
-                <option value="movies">সিনেমা</option>
-              </select>
+
+            <div class="col-lg-4">
+                <div class="channel-list-container">
+                    <input type="text" id="channelSearch" class="form-control mb-2" placeholder="চ্যানেল খুঁজুন..." onkeyup="filterChannels()">
+                    <div class="mb-3">
+                      <label for="channelCategory" class="form-label">ক্যাটাগরি:</label>
+                      <select id="channelCategory" class="form-select" onchange="filterChannels()">
+                        <option value="all">সব চ্যানেল</option>
+                        <option value="sports">ক্রীড়া</option>
+                        <option value="news">সংবাদ</option>
+                        <option value="movies">সিনেমা</option>
+                        <option value="religious">ধর্মীয়</option>
+                        <option value="documentary">তথ্যচিত্র</option>
+                        <option value="general">সাধারণ</option>
+                      </select>
+                    </div>
+                    <ul class="list-group" id="channelList">
+                        </ul>
+                </div>
             </div>
-            <ul class="list-group" id="channelList"></ul>
-          </div>
         </div>
-      </div>
     </div>
-    <p class="mt-3 text-muted">দ্রষ্টব্য: লাইভ স্ট্রিম লিংকগুলো অস্থায়ী হতে পারে।</p>
+    <p class="mt-3 text-muted">দ্রষ্টব্য: লাইভ স্ট্রিম লিংকগুলো অস্থায়ী হতে পারে এবং কপিরাইট সংক্রান্ত সীমাবদ্ধতা থাকতে পারে। কিছু স্ট্রিম কাজ নাও করতে পারে।</p>
   </div>
 
   <div id="call" class="section">
@@ -364,20 +371,23 @@
       <label for="callPeerId">পিয়ার আইডি</label>
       <input type="text" id="callPeerId" placeholder="পিয়ার আইডি" class="form-control" style="margin-bottom:10px">
       <button onclick="startCall()" aria-label="কল শুরু করুন">কল শুরু</button>
-      <div id="yourPeerId" class="mt-3"></div>
+      <div id="yourPeerId" class="mt-3">আপনার পিয়ার আইডি: <span id="peerIdDisplay">লোডিং...</span></div>
       <div class="video-call-container mt-3">
         <video id="localVideo" autoplay muted></video>
-        <video id="remoteVideo" autoplay"></video>
+        <video id="remoteVideo" autoplay></video>
       </div>
     </div>
+    <p class="mt-3 text-muted">দ্রষ্টব্য: কল ফিচারের জন্য HTTPS বা localhost প্রয়োজন এবং উভয় পক্ষকে একই পিয়ার আইডি ব্যবহার করতে হবে।</p>
   </div>
 
   <footer class="text-center py-3 mt-3" style="background-color: var(--nav-bg); color: white;">
     <p>Authorize by (6Team)</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eP54Z5D9z/x2hBd" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <script src="/script.js"></script>
+
 </body>
-</html>
+                          </html>

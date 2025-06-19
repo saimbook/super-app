@@ -5,9 +5,9 @@ const videoSpinner = document.getElementById('videoSpinner');
 let peer = null;
 let chatConn = null;
 
-// Channel List
+// Channel List (Updated with new channels)
 const channels = [
-{ name: 'T Sports', url: 'http://38.96.178.201/live/TSports/tracks-v1a1/mono.m3u8', logo: 'https://raw.githubusercontent.com/subirkumarpaul/Logo/main/T%20Sports.png', type: 'application/x-mpegURL', category: 'sports' },
+  { name: 'T Sports', url: 'http://38.96.178.201/live/TSports/tracks-v1a1/mono.m3u8', logo: 'https://raw.githubusercontent.com/subirkumarpaul/Logo/main/T%20Sports.png', type: 'application/x-mpegURL', category: 'sports' },
   { name: 'Deepto TV', url: 'https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8', logo: 'https://raw.githubusercontent.com/subirkumarpaul/Logo/main/Deepto%20TV.jpeg', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Bangla TV', url: 'https://byphdgllyk.gpcdn.net/hls/banglatveurope/index.m3u8', logo: 'https://raw.githubusercontent.com/subirkumarpaul/Logo/main/Bangla%20TV.png', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Peace TV English', url: 'https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/index.m3u8', logo: 'https://i.ibb.co/598TYnC/20240827-092020.png', type: 'application/x-mpegURL', category: 'religious' },
@@ -16,7 +16,7 @@ const channels = [
   { name: 'News18 Bangla', url: 'https://amg01448-samsungin-news18bangla-samsungin-ad-qy.amagi.tv/playlist/amg01448-samsungin-news18bangla-samsungin/playlist.m3u8', logo: 'https://jio.dinesh29.com.np/smart/ardinesh/logos/news18-bangla-news.png', type: 'application/x-mpegURL', category: 'news' },
   { name: 'Boishaki TV', url: 'https://boishakhi.sonarbanglatv.com/boishakhi/boishakhitv/index.m3u8', logo: 'https://raw.githubusercontent.com/subirkumarpaul/Logo/main/Boishaki%20TV.png', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Discovery Bengali (Test)', url: 'https://varun-iptv.netlify.app/m3u/discoverybengali.m3u8', type: 'application/x-mpegURL', category: 'documentary' },
-  { name: 'Bangladesh Generic (Test)', url: 'https://channel-swart.vercel.app/bd.m3u8', logo: 'https://i.ibb.co.com/PG7zf8xb/download.jpg', type: 'application/x-mpegURL', category: 'general' },
+  { name: 'Bangladesh Generic (Test)', url: 'https://channel-swart.vercel.app/bd.m3u8', logo: 'https://i.ibb.co/PG7zf8xb/download.jpg', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Premium 741 (Test)', url: 'https://ddy6new.newkso.ru/ddy6/premium741/mono.m3u8', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Rex Stream (Test)', url: 'https://rex-streaming.vercel.app/api/x/109987.m3u8', type: 'application/x-mpegURL', category: 'general' },
   { name: 'Sunnah (Test)', url: 'http://m.live.net.sa:1935/live/sunnah/chunklist.m3u8?v=1', type: 'application/x-mpegURL', category: 'religious' },
@@ -40,6 +40,8 @@ function showSection(id) {
   sections.forEach(section => section.classList.remove('active'));
   const activeSection = document.getElementById(id);
   if (activeSection) activeSection.classList.add('active');
+  // Handle URL hash
+  if (id) window.location.hash = id;
 }
 
 function toggleDarkMode() {
@@ -111,3 +113,181 @@ function addEvent() {
   const eventContent = sanitizeInput(document.getElementById('eventContent').value.trim());
   if (eventContent) {
     const events = JSON.parse(localStorage.getItem('events') || '[]');
+    events.push({ content: eventContent, timestamp: new Date().toISOString() });
+    localStorage.setItem('events', JSON.stringify(events));
+    document.getElementById('eventContent').value = '';
+    displayEvents();
+  }
+}
+
+function displayEvents() {
+  const eventListDiv = document.getElementById('eventList');
+  const events = JSON.parse(localStorage.getItem('events') || '[]');
+  eventListDiv.innerHTML = events.length ? '' : '<div class="card">কোনো ইভেন্ট নেই!</div>';
+  events.forEach(event => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.innerHTML = `${event.content}<br><small>${new Date(event.timestamp).toLocaleString('bn-BD')}</small>`;
+    eventListDiv.appendChild(card);
+  });
+}
+
+// Chat Section
+function initializeChat() {
+  if (!peer) {
+    peer = new Peer({ host: '0.peerjs.com', port: 443, path: '/peerjs' });
+    peer.on('open', id => console.log('Peer ID:', id));
+    peer.on('connection', conn => {
+      chatConn = conn;
+      chatConn.on('data', data => {
+        const chatBox = document.getElementById('chatBox');
+        const div = document.createElement('div');
+        div.classList.add('chat-message');
+        div.innerHTML = `<p>${data.content}</p><small>${new Date().toLocaleTimeString('bn-BD')}</small>`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    });
+  }
+}
+
+function joinChatRoom() {
+  const roomId = sanitizeInput(document.getElementById('chatRoomId').value.trim());
+  if (roomId && peer) chatConn = peer.connect(roomId);
+}
+
+function sendMessage() {
+  const chatInput = document.getElementById('chatInput');
+  const message = sanitizeInput(chatInput.value.trim());
+  if (message && chatConn) {
+    chatConn.send({ content: message });
+    const chatBox = document.getElementById('chatBox');
+    const div = document.createElement('div');
+    div.classList.add('chat-message');
+    div.innerHTML = `<p>${message}</p><small>${new Date().toLocaleTimeString('bn-BD')}</small>`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    chatInput.value = '';
+  }
+}
+
+async function translateText(text) {
+  try {
+    const response = await fetch('https://libretranslate.de/translate', {
+      method: 'POST',
+      body: JSON.stringify({ q: text, source: 'en', target: 'bn' }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    return data.translatedText;
+  } catch {
+    return 'ট্রান্সলেশন ব্যর্থ!';
+  }
+}
+
+// Live TV Section
+function loadHlsJs(callback) {
+  if (typeof Hls === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+    script.onload = callback;
+    document.head.appendChild(script);
+  } else callback();
+}
+
+function playChannel(streamUrl, channelName) {
+  videoSpinner.style.display = 'block';
+  if (Hls.isSupported() && streamUrl.endsWith('.m3u8')) {
+    if (tvPlayer.hls) tvPlayer.hls.destroy();
+    const hls = new Hls();
+    hls.loadSource(streamUrl);
+    hls.attachMedia(tvPlayer);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      videoSpinner.style.display = 'none';
+      tvPlayer.play().catch(() => document.getElementById('streamError').style.display = 'block');
+    });
+  } else {
+    tvPlayer.src = streamUrl;
+    tvPlayer.play().then(() => videoSpinner.style.display = 'none').catch(() => document.getElementById('streamError').style.display = 'block');
+  }
+  currentChannelName.textContent = `Now Playing: ${channelName}`;
+  const items = channelList.getElementsByTagName('li');
+  for (let item of items) item.classList.remove('active-channel');
+  channelList.querySelector(`[data-stream-url="${streamUrl}"]`)?.classList.add('active-channel');
+}
+
+function setupChannels() {
+  loadHlsJs(() => {
+    const search = document.getElementById('channelSearch').value.toLowerCase();
+    const category = document.getElementById('channelCategory').value;
+    let filtered = channels.filter(ch => (category === 'all' || ch.category === category) && ch.name.toLowerCase().includes(search));
+    channelList.innerHTML = filtered.length ? '' : '<li class="list-group-item text-center">কোনো চ্যানেল নেই!</li>';
+    filtered.forEach(ch => {
+      const li = document.createElement('li');
+      li.classList.add('list-group-item');
+      li.setAttribute('data-stream-url', ch.url);
+      li.textContent = ch.name;
+      li.onclick = () => playChannel(ch.url, ch.name);
+      channelList.appendChild(li);
+    });
+    if (filtered.length) playChannel(filtered[0].url, filtered[0].name);
+  });
+}
+
+function filterChannels() {
+  setupChannels();
+}
+
+// Call Section
+function initializeCall() {
+  if (!peer) {
+    peer = new Peer({ host: '0.peerjs.com', port: 443, path: '/peerjs' });
+    peer.on('open', id => document.getElementById('yourPeerId').textContent = `Your Peer ID: ${id}`);
+    peer.on('call', call => {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+        document.getElementById('localVideo').srcObject = stream;
+        call.answer(stream);
+        call.on('stream', remoteStream => document.getElementById('remoteVideo').srcObject = remoteStream);
+      }).catch(err => console.error(err));
+    });
+  }
+}
+
+function startCall() {
+  const peerId = sanitizeInput(document.getElementById('callPeerId').value.trim());
+  if (peerId && peer) {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+      document.getElementById('localVideo').srcObject = stream;
+      peer.call(peerId, stream).on('stream', remoteStream => document.getElementById('remoteVideo').srcObject = remoteStream);
+    }).catch(err => console.error(err));
+  }
+}
+
+// Question Section
+function submitQuestion() {
+  const question = sanitizeInput(document.getElementById('questionInput').value.trim());
+  const responseDiv = document.getElementById('questionResponse');
+  if (question) {
+    responseDiv.innerHTML = `<div class='card'>🎉 প্রশ্ন "${question}" জমা হয়েছে! আমরা শীঘ্রই উত্তর দেবো।</div>`;
+    document.getElementById('questionInput').value = '';
+  } else {
+    responseDiv.innerHTML = `<div class='card'>⚠️ প্রশ্ন লিখুন!</div>`;
+  }
+}
+
+// PWA Service Worker
+if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js').catch(err => console.error(err));
+}
+
+// Initial Load and Hash Handling
+window.onload = () => {
+  const hash = window.location.hash.substring(1);
+  if (hash) showSection(hash);
+  else showSection('jokes');
+  loadJoke();
+  loadStory();
+  displayEvents();
+  setupChannels();
+  displayProfile();
+};

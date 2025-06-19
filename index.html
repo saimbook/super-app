@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>সুপার অ্যাপ v5</title>
+  <link rel="manifest" href="/manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    :root {
+      --bg-color: #f4f4f4;
+      --text-color: #000;
+      --card-bg: #fff;
+      --nav-bg: #4a5568;
+      --header-bg: #2d3748;
+      --button-bg: #3182ce;
+      --button-hover-bg: #2b6cb0;
+    }
+    body.dark {
+      --bg-color: #1a202c;
+      --text-color: #f4f4f4;
+      --card-bg: #2d3748;
+      --nav-bg: #2a2e38;
+      --header-bg: #12151c;
+      --button-bg: #4299e1;
+      --button-hover-bg: #63b3ed;
+    }
+    body {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header {
+      background-color: var(--header-bg);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      flex-grow: 1;
+      text-align: center;
+    }
+    header button {
+      margin-left: 10px;
+      padding: 8px 15px;
+      background-color: var(--button-bg);
+      border-radius: 5px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    header button:hover {
+      background-color: var(--button-hover-bg);
+    }
+    .navbar-nav .nav-link {
+      color: white !important;
+      padding: 10px 15px;
+      transition: background-color 0.2s ease;
+    }
+    .navbar-nav .nav-link:hover {
+      background-color: var(--header-bg);
+    }
+    .section {
+      padding: 20px;
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .card {
+      background: var(--card-bg);
+      color: var(--text-color);
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s, color 0.3s;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      background-color: var(--button-bg);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: var(--button-hover-bg);
+    }
+    input[type="text"], input[type="email"], input[type="password"], textarea {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    body.dark input[type="text"], body.dark input[type="email"], body.dark input[type="password"], body.dark textarea {
+      background-color: #3d4a5c;
+      border-color: #555;
+    }
+    a {
+      color: var(--button-bg);
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--button-hover-bg);
+    }
+    .video-player-container {
+      background-color: #000;
+      padding: 10px;
+      border-radius: 8px;
+      position: relative;
+    }
+    .channel-list-container {
+      background-color: var(--card-bg);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-height: 70vh;
+      overflow-y: auto;
+      transition: background 0.3s, color 0.3s;
+    }
+    .channel-list-container h4 {
+      margin-bottom: 15px;
+      color: var(--button-bg);
+    }
+    .channel-list-container .list-group-item {
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border-color: #ddd;
+    }
+    body.dark .channel-list-container .list-group-item {
+      border-color: #444;
+    }
+    .channel-list-container .list-group-item:hover {
+      background-color: var(--nav-bg);
+      color: white;
+    }
+    .channel-list-container .list-group-item.active-channel {
+      background-color: var(--button-bg);
+      color: white;
+      font-weight: bold;
+    }
+    .channel-list-container .list-group-item.active-channel:hover {
+      background-color: var(--button-hover-bg);
+    }
+    .channel-list-container .list-group-item img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      border-radius: 5px;
+      object-fit: contain;
+    }
+    .chat-message {
+      background-color: var(--bg-color);
+      padding: 8px 12px;
+      border-radius: 15px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+      max-width: 80%;
+    }
+    body.dark .chat-message {
+      background-color: #3d4a5c;
+    }
+    .chat-message small {
+      display: block;
+      text-align: right;
+      font-size: 0.75em;
+      color: #777;
+    }
+    .loading-spinner {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .video-call-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .video-call-container video {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 8px;
+      background-color: #000;
+    }
+    @media (max-width: 991px) {
+      .channel-list-container {
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📱 সুপার অ্যাপ (v5)</h1>
+    <button onclick="toggleDarkMode()" aria-label="ডার্ক মোড টগল করুন">🌙 ডার্ক মোড</button>
+  </header>
+  <nav class="navbar navbar-expand-lg" style="background-color: var(--nav-bg);">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="নেভিগেশন টগল করুন">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('jokes')">😂 জোকস</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('stories')">📖 গল্প</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('news')">📰 নিউজ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('videos')">🎥 ভিডিও</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('profile')">👤 প্রোফাইল</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('prayer')">🕌 নামাজ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('calendar')">📅 ক্যালেন্ডার</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('events')">📝 ইভেন্ট</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('chat')">💬 চ্যাট</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('live-tv')">📺 লাইভ টিভি</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('call')">📞 কল</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="printPage()">🖨️ প্রিন্ট</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="jokes" class="section active">
+    <h2>বাংলা জোকস</h2>
+    <div class="card" id="joke">জোকস লোড হচ্ছে...</div>
+    <button onclick="loadJoke()" aria-label="নতুন জোকস লোড করুন">নতুন জোকস</button>
+  </div>
+
+  <div id="stories" class="section">
+    <h2>বাংলা গল্প</h2>
+    <div class="card" id="story">গল্প লোড হচ্ছে...</div>
+    <button onclick="loadStory()" aria-label="নতুন গল্প লোড করুন">নতুন গল্প</button>
+  </div>
+
+  <div id="news" class="section">
+    <h2>বাংলা নিউজ</h2>
+    <div class="card">🔗 <a href="https://www.bbc.com/bengali" target="_blank">BBC বাংলা</a></div>
+    <div class="card">🔗 <a href="https://bangla.bdnews24.com" target="_blank">BDNews24 বাংলা</a></div>
+  </div>
+
+  <div id="videos" class="section">
+    <h2>ভিডিও</h2>
+    <div class="card">
+      <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div id="profile" class="section">
+    <h2>ইউজার প্রোফাইল</h2>
+    <div class="card">
+      <label for="username">নাম</label>
+      <input type="text" id="username" placeholder="নাম" class="form-control" style="margin-bottom:10px"><br>
+      <label for="email">ইমেইল</label>
+      <input type="email" id="email" placeholder="ইমেইল" class="form-control" style="margin-bottom:10px"><br>
+      <button onclick="saveProfile()" aria-label="প্রোফাইল সেভ করুন">প্রোফাইল সেভ</button>
+      <div id="profileMessage" class="mt-3"></div>
+      <h4 class="mt-3">ফেভারিট চ্যানেল</h4>
+      <ul id="favoriteChannels" class="list-group"></ul>
+    </div>
+  </div>
+
+  <div id="prayer" class="section">
+    <h2>নামাজের সময়</h2>
+    <div class="card">🕓 ফজর: ৪:৩০ AM</div>
+    <div class="card">🕔 যোহর: ১২:১৫ PM</div>
+    <div class="card">🕕 আসর: ৪:০০ PM</div>
+    <div class="card">🕖 মাগরিব: ৬:৩০ PM</div>
+    <div class="card">🕗 এশা: ৮:০০ PM</div>
+  </div>
+
+  <div id="calendar" class="section">
+    <h2>ইসলামিক ক্যালেন্ডার</h2>
+    <iframe src="https://www.islamicfinder.org/islamic-calendar/" width="100%" height="500" frameborder="0"></iframe>
+  </div>
+
+  <div id="events" class="section">
+    <h2>ইভেন্ট ও পোস্ট যোগ করুন</h2>
+    <div class="card">
+      <textarea id="eventContent" placeholder="আপনার ইভেন্ট বা পোস্ট লিখুন..." class="form-control" style="width:100%; height: 100px; margin-bottom: 10px; padding: 10px; box-sizing: border-box;"></textarea>
+      <button onclick="addEvent()" aria-label="ইভেন্ট পোস্ট করুন">পোস্ট করুন</button>
+    </div>
+    <h3>সকল ইভেন্ট ও পোস্ট</h3>
+    <div id="eventList"></div>
+  </div>
+
+  <div id="chat" class="section">
+    <h2>রিয়েল-টাইম চ্যাট</h2>
+    <div class="card">
+      <label for="chatRoomId">চ্যাট রুম আইডি</label>
+      <input type="text" id="chatRoomId" placeholder="রুম আইডি" class="form-control" style="margin-bottom:10px">
+      <button onclick="joinChatRoom()" aria-label="চ্যাট রুমে জয়েন করুন">জয়েন</button>
+      <div id="chatBox" class="card" style="height: 300px; overflow-y: auto; margin-top: 10px;"></div>
+      <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." class="form-control" style="width: calc(100% - 70px); display: inline-block; margin-right: 5px;" aria-label="মেসেজ ইনপুট">
+      <button onclick="sendMessage()" aria-label="মেসেজ পাঠান">পাঠান</button>
+    </div>
+  </div>
+
+  <div id="live-tv" class="section">
+    <h2>📺 লাইভ টিভি</h2>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-8 mb-3">
+          <div class="video-player-container">
+            <video id="tvPlayer" controls autoplay style="width: 100%; height: auto; max-height: 600px;" aria-label="লাইভ টিভি প্লেয়ার">
+              আপনার ব্রাউজার ভিডিও সমর্থন করে না।
+            </video>
+            <div class="loading-spinner" id="videoSpinner"></div>
+          </div>
+          <h4 id="currentChannelName" class="mt-3 text-center">একটি চ্যানেল নির্বাচন করুন</h4>
+          <div id="streamError" style="display: none; color: red; text-align: center;"></div>
+        </div>
+        <div class="col-lg-4">
+          <div class="channel-list-container">
+            <h4>চ্যানেল তালিকা</h4>
+            <div class="mb-3">
+              <label for="channelSearch" class="form-label">চ্যানেল সার্চ</label>
+              <input type="text" id="channelSearch" placeholder="চ্যানেল খুঁজুন..." class="form-control" oninput="filterChannels()" aria-label="চ্যানেল সার্চ">
+            </div>
+            <div class="mb-3">
+              <label for="channelCategory" class="form-label">ক্যাটাগরি নির্বাচন করুন</label>
+              <select id="channelCategory" class="form-select" onchange="filterChannels()" aria-label="চ্যানেল ক্যাটাগরি নির্বাচন">
+                <option value="all">সব চ্যানেল</option>
+                <option value="sports">ক্রীড়া</option>
+                <option value="news">সংবাদ</option>
+                <option value="movies">সিনেমা</option>
+              </select>
+            </div>
+            <ul class="list-group" id="channelList"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 text-muted">দ্রষ্টব্য: লাইভ স্ট্রিম লিংকগুলো অস্থায়ী হতে পারে।</p>
+  </div>
+
+  <div id="call" class="section">
+    <h2>অডিও/ভিডিও কল</h2>
+    <div class="card">
+      <label for="callPeerId">পিয়ার আইডি</label>
+      <input type="text" id="callPeerId" placeholder="পিয়ার আইডি" class="form-control" style="margin-bottom:10px">
+      <button onclick="startCall()" aria-label="কল শুরু করুন">কল শুরু</button>
+      <div id="yourPeerId" class="mt-3"></div>
+      <div class="video-call-container mt-3">
+        <video id="localVideo" autoplay muted></video>
+        <video id="remoteVideo" autoplay"></video>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-3 mt-3" style="background-color: var(--nav-bg); color: white;">
+    <p>Authorize by (6Team)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>
